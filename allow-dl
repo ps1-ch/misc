@@ -1,0 +1,17 @@
+#!/bin/sh
+
+URL='http://ipdeny.com/ipblocks/data/countries'
+FILE='/etc/pf-allow'
+ZONES='ch'
+
+> $FILE
+
+for ZONE in $ZONES; do
+        ftp -V -o - $URL/$ZONE.zone >> $FILE
+        sleep 1
+done
+
+echo >> $FILE
+cat $FILE.local >> $FILE
+
+pfctl -t allow -T replace -f $FILE
