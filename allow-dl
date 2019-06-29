@@ -7,8 +7,8 @@ ZONES='ch'
 > $FILE
 
 for ZONE in $ZONES; do
-        ftp -V -o - $URL/$ZONE.zone >> $FILE
-        sleep 1
+	ftp -Vo - $URL/$ZONE.zone >> $FILE
+	sleep 1
 done
 
 echo >> $FILE

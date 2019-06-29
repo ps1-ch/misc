@@ -2,31 +2,24 @@
 
 URL='https://data.geo.admin.ch/ch.meteoschweiz.messwerte-aktuell'
 FILE='VQHA80.csv'
-STATION='BUS'
+STATION='GOE'
 DEST='loxone'
 
 transfer() {
 	local _par=$1 _port=$2 _val
 
 	_val=`awk \
-		-v stn="$STATION" \
-		-v par="$_par" \
-		-F \; \
-		'{if ($1 == stn) {print $par}}' \
-		/tmp/$FILE`
+	    -v stn="$STATION" \
+	    -v par="$_par" \
+	    -F \; \
+	    '{if ($1 == stn) {print $par}}' \
+	    /tmp/$FILE`
 
-	if [ $_val != "-" ]; then
-		echo $_val| nc \
-			-u \
-			-w 1 \
-			$DEST $_port
-	fi
+	[ $_val != "-" ] && echo $_val | nc -uw 1 $DEST $_port
 }
 
-ftp \
-	-MVo /tmp/$FILE \
-	$URL/$FILE
+ftp -MVo /tmp/$FILE $URL/$FILE
 
-transfer 3 6004		# lufttemperatur
-transfer 7 6003		# relative luftfeuchtigkeit
+transfer 3 6003		# lufttemperatur
+transfer 7 6004		# relative luftfeuchtigkeit
 transfer 12 6005	# luftdruck

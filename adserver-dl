@@ -1,0 +1,7 @@
+#!/bin/sh
+
+URL='http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext'
+
+ftp -Vo /var/unbound/etc/unbound-adservers.conf $URL
+
+rcctl reload unbound
